@@ -26,7 +26,7 @@ public sealed class ScrapeCommand : AsyncCommand<ScrapeCommand.Settings>
         using var client = settings.CreateClient();
         var doc = await client.ScrapeAsync(new ScrapeInput
         {
-            StartUrls = [new { url = settings.Url }],
+            DateUrl = settings.Url,
             MaxResults = settings.Max
         });
 

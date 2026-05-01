@@ -19,9 +19,9 @@ public sealed class SearchCommand : AsyncCommand<SearchCommand.Settings>
         public int Max { get; init; } = 10;
 
         [CommandOption("--sort <SORT>")]
-        [Description("Sort by: relevance, newest, popular")]
-        [DefaultValue("relevance")]
-        public string Sort { get; init; } = "relevance";
+        [Description("Sort by: popular, newest")]
+        [DefaultValue("popular")]
+        public string Sort { get; init; } = "popular";
     }
 
     protected override async Task<int> ExecuteAsync(CommandContext context, Settings settings, CancellationToken cancellation)
@@ -31,9 +31,9 @@ public sealed class SearchCommand : AsyncCommand<SearchCommand.Settings>
         using var client = settings.CreateClient();
         var doc = await client.SearchAsync(new SearchInput
         {
-            SearchTerms = [settings.Query],
+            SearchQuery = settings.Query,
             MaxResults = settings.Max,
-            Sort = settings.Sort
+            SortBy = settings.Sort
         });
 
         YamlOutput.Write(doc);
