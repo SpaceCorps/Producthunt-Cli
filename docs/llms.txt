@@ -1,0 +1,46 @@
+# Product Hunt CLI
+
+> A blazing fast native command-line tool and agent interface for searching and scraping Product Hunt launches, products, reviews, and collections via Apify. Built in Rust for developers and autonomous AI agents.
+
+## When to Use This CLI
+
+Use the `producthunt` CLI whenever you need to:
+- **Search Product Hunt:** Discover products, launches, categories, or keywords with sorting (`popular`, `newest`) and time-window filtering.
+- **Scrape Product Pages:** Extract full product descriptions, links, maker details, media, and vote counts from Product Hunt post URLs.
+- **Scrape Collections & Topics:** Scrape curated collections and topic directories into structured dataset items.
+- **Agentic Automation:** Drive discovery, competitive research, and startup tracking deterministically via `--json` output and stable error exit codes.
+
+Do NOT use this tool if:
+- You need to upvote products or post comments (the underlying scraper actor is read-only).
+- You are trying to interact with Product Hunt's private internal GraphQL endpoints directly without an Apify token.
+
+## Core Agent Operating Principles
+
+1. **Authentication Options:** Provide credentials via named accounts in the OS keystore (`--account <name>` or `-a <name>`), `--api-key <key>`, or `APIFY_TOKEN` in the environment.
+2. **First-Time Setup:** Run `producthunt login` to authenticate with your Apify API token (opens the browser to copy an API token) or use `printf %s "$KEY" | producthunt accounts add <name> --api-key-stdin` in non-interactive environments.
+3. **Machine-Readable Outputs:** Always supply `--json` when parsing command results in scripts or LLM tool-calling loops.
+4. **Execution Time:** Search and scrape calls run synchronously through the Apify actor and typically take 30 to 60 seconds.
+5. **Error Codes:** Non-zero exit codes carry structured error envelopes on stderr with stable machine-readable codes (`no_account`, `auth_required`, `not_found`, `rate_limited`, `invalid_input`, `network`, `error`).
+
+## Key Command Patterns
+
+### Authentication & Accounts
+- `producthunt login [name]`: Interactively authenticate and store the API token in the OS keystore.
+- `producthunt accounts list --check`: List all configured accounts and verify token validity.
+- `producthunt accounts test <name>`: Verify connectivity and inspect token identity.
+- `producthunt me -a <account>`: Inspect authenticated Apify user details.
+
+### Searching
+- `producthunt search "<query>" --json`: Search products with default 10 results.
+- `producthunt search "<query>" --sort popular --max 20 --json`: Search top popular results.
+- `producthunt search "<query>" --sort newest --time-frame this-month --json`: Search recent launches this month.
+
+### Scraping
+- `producthunt scrape "<url>" --json`: Scrape product post, launch page, topic, or collection URL.
+- `producthunt scrape "<url>" --max 30 --json`: Scrape up to 30 items from a topic or collection URL.
+
+## Documentation Links
+- Full Website: https://spacecorps.github.io/Producthunt-Cli/
+- Detailed Agent Manual: https://spacecorps.github.io/Producthunt-Cli/llms-full.txt
+- Authentication Guide: https://spacecorps.github.io/Producthunt-Cli/auth.md
+- GitHub Repository: https://github.com/SpaceCorps/Producthunt-Cli

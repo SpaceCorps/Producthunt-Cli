@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Hunt CLI | Fast Native CLI for Product Hunt in Rust</title>
+  <meta name="description" content="A blazing fast native command-line tool and agent interface for searching and scraping Product Hunt launches, products, and collections via Apify, written in Rust.">
+  <link rel="canonical" href="https://spacecorps.github.io/Producthunt-Cli/">
+  <meta name="is-agentic-site-type" content="content">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="keywords" content="Product Hunt, CLI, Rust, Apify, web scraping, launches, developer tools, AI agents, market research">
+  <meta name="author" content="SpaceCorps">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://spacecorps.github.io/Producthunt-Cli/">
+  <meta property="og:title" content="Product Hunt CLI | Fast Native CLI for Product Hunt in Rust">
+  <meta property="og:description" content="A blazing fast native command-line tool and agent interface for searching and scraping Product Hunt launches and products, written in Rust.">
+  <meta property="og:image" content="https://spacecorps.github.io/Producthunt-Cli/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Product Hunt CLI — Native Rust Command Line Tool">
+  <meta property="og:site_name" content="Product Hunt CLI">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://spacecorps.github.io/Producthunt-Cli/">
+  <meta name="twitter:title" content="Product Hunt CLI | Fast Native CLI for Product Hunt in Rust">
+  <meta name="twitter:description" content="A blazing fast native command-line tool and agent interface for searching and scraping Product Hunt launches and products, written in Rust.">
+  <meta name="twitter:image" content="https://spacecorps.github.io/Producthunt-Cli/og-image.png">
+
+  <!-- AI Agents & Discovery -->
+  <link rel="alternate" type="text/markdown" href="https://spacecorps.github.io/Producthunt-Cli/index.md" title="Markdown Homepage">
+  <link rel="alternate" type="text/markdown" href="https://spacecorps.github.io/Producthunt-Cli/llms.txt" title="LLMs.txt">
+  <link rel="sitemap" type="application/xml" href="https://spacecorps.github.io/Producthunt-Cli/sitemap.xml" title="Sitemap">
+  <script>
+    if (new URLSearchParams(window.location.search).get('mode') === 'agent') {
+      window.location.href = 'llms.txt';
+    }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Product Hunt CLI",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux, Windows",
+        "url": "https://spacecorps.github.io/Producthunt-Cli/",
+        "description": "A blazing fast native command-line tool and agent interface for searching and scraping Product Hunt launches, products, and collections via Apify, written in Rust.",
+        "softwareVersion": "1.0.0",
+        "downloadUrl": "https://github.com/SpaceCorps/Producthunt-Cli/releases/tag/v1.0.0",
+        "license": "https://opensource.org/licenses/MIT",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "SpaceCorps",
+          "url": "https://github.com/SpaceCorps"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "SpaceCorps",
+        "url": "https://github.com/SpaceCorps",
+        "sameAs": [
+          "https://github.com/SpaceCorps/Producthunt-Cli",
+          "https://github.com/SpaceCorps"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "technical support",
+          "url": "https://github.com/SpaceCorps/Producthunt-Cli/issues"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "US"
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: rgba(22, 27, 46, 0.7);
+      --bg-card-hover: rgba(30, 38, 66, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(99, 102, 241, 0.35);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --accent: #38bdf8;
+      --ph-orange: #da552f;
+      --success: #10b981;
+      --code-bg: #0d1117;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(218, 85, 47, 0.18), transparent),
+        radial-gradient(circle 400px at 90% 20%, rgba(99, 102, 241, 0.08), transparent);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    a:hover {
+      color: #7dd3fc;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 13, 22, 0.85);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--ph-orange), #ea580c);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+    }
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .btn-github {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text) !important;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(218, 85, 47, 0.12);
+      border: 1px solid rgba(218, 85, 47, 0.3);
+      color: #fb923c;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .install-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      max-width: 680px;
+      margin: 0 auto 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .install-box code {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s ease;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .features {
+      padding: 40px 0 80px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      font-size: 1.75rem;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .command-preview {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 60px;
+    }
+
+    .command-preview h2 {
+      font-size: 1.75rem;
+      margin-bottom: 16px;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: #94a3b8;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .code-block .hl { color: #38bdf8; }
+    .code-block .param { color: #fb923c; }
+    .code-block .comment { color: var(--text-dim); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    td code {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      background: rgba(9, 13, 22, 0.95);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-inner">
+      <div class="logo">
+        <span class="logo-badge">PH</span>
+        <span>Product Hunt CLI</span>
+      </div>
+      <nav class="nav-links">
+        <a href="about.html">About</a>
+        <a href="auth.html">Authentication</a>
+        <a href="pricing.md">Pricing</a>
+        <a href="contact.html">Support</a>
+        <a href="llms.txt">Agent Docs</a>
+        <a href="https://github.com/SpaceCorps/Producthunt-Cli" class="btn-github" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">⚡ Rust 2024 Native • MIT Licensed</div>
+      <h1>Product Hunt in Your Terminal.<br>Engineered for Autonomous Agents.</h1>
+      <p>Search launches, extract product metadata, and scrape collections via the Apify Product Hunt scraper actor with zero runtime dependencies and sub-millisecond cold starts.</p>
+
+      <div class="install-box">
+        <code id="cmd">cargo install --git https://github.com/SpaceCorps/Producthunt-Cli --locked</code>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('cmd').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Native Speed & Zero Runtime</h3>
+          <p>Single standalone binary compiled with Rust 2024 (1.89+). Starts in 1–3 ms, ideal for terminal workflows, automated pipelines, and tight agent loops.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>Agentic Protocol & JSON</h3>
+          <p>Clean YAML by default for terminal readability, with <code>--json</code> for deterministic agent loops. Structured error envelopes on stderr with stable exit codes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Native OS Keystore</h3>
+          <p>Secrets never touch plaintext config files. Seamlessly stores Apify tokens in macOS Keychain, Windows DPAPI, or Linux Secret Service.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Deep Search & Discovery</h3>
+          <p>Search by keyword, product name, or topic. Filter by popularity or recency, and apply time windows from today to all-time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🕷️</div>
+          <h3>Full Post & Collection Scraping</h3>
+          <p>Scrape launch pages, posts, topic catalogs, or maker collections directly from Product Hunt URLs into structured dataset records.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Multi-Account Workspaces</h3>
+          <p>Isolate multiple Apify accounts or personal/work workspaces with safe <code>--account &lt;name&gt;</code> resolution and verification.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="command-preview">
+      <h2>Command Quick Reference</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>producthunt search</code></td>
+            <td>Search products, launches, and topics</td>
+            <td><code>producthunt search "AI coding" --sort popular --max 20</code></td>
+          </tr>
+          <tr>
+            <td><code>producthunt scrape</code></td>
+            <td>Scrape a Product Hunt URL into dataset items</td>
+            <td><code>producthunt scrape "https://www.producthunt.com/posts/..."</code></td>
+          </tr>
+          <tr>
+            <td><code>producthunt me</code></td>
+            <td>Inspect active Apify user and token identity</td>
+            <td><code>producthunt me -a work</code></td>
+          </tr>
+          <tr>
+            <td><code>producthunt login</code></td>
+            <td>Interactive token login with browser prompt</td>
+            <td><code>producthunt login work</code></td>
+          </tr>
+          <tr>
+            <td><code>producthunt accounts</code></td>
+            <td>Manage named accounts in the OS keystore</td>
+            <td><code>producthunt accounts list --check</code></td>
+          </tr>
+          <tr>
+            <td><code>producthunt agent-readme</code></td>
+            <td>Print full agent manual (Markdown or JSON)</td>
+            <td><code>producthunt agent-readme --json</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <p>&copy; 2026 SpaceCorps. Open source under the MIT License.</p>
+        <p style="margin-top: 4px;">Based on original prototype by Niels Bosma.</p>
+      </div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="pricing.md">Pricing</a>
+        <a href="auth.md">Auth Guide</a>
+        <a href="contact.html">Contact</a>
+        <a href="llms.txt">llms.txt</a>
+        <a href="sitemap.xml">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

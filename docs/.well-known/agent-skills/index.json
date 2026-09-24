@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "producthunt-cli",
+      "description": "Search and scrape Product Hunt launches, products, reviews, and collections via the Apify scraper actor using a native Rust CLI.",
+      "type": "skill-md",
+      "url": "https://spacecorps.github.io/Producthunt-Cli/llms.txt",
+      "digest": "sha256:3ddc1691399ab1fb40438e74572f4c41ae8b3080c7a7db5de7f3f0e302879147"
+    }
+  ]
+}

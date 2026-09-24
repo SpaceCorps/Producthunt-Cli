@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About · Product Hunt CLI</title>
+  <meta name="description" content="About Product Hunt CLI: An open source native Rust command-line tool and agent interface for searching and scraping Product Hunt via Apify.">
+  <link rel="canonical" href="https://spacecorps.github.io/Producthunt-Cli/about.html">
+  <meta property="og:title" content="About · Product Hunt CLI">
+  <meta property="og:description" content="About Product Hunt CLI: An open source native Rust command-line tool and agent interface for searching and scraping Product Hunt via Apify.">
+  <meta property="og:url" content="https://spacecorps.github.io/Producthunt-Cli/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://spacecorps.github.io/Producthunt-Cli/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="is-agentic-site-type" content="content">
+  <style>
+    body { background: #090d16; color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; padding: 40px 20px; }
+    .content-box { max-width: 800px; margin: 0 auto; background: rgba(22, 27, 46, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; }
+    h1 { font-size: 2.2rem; margin-bottom: 20px; color: #fff; }
+    h2 { font-size: 1.4rem; margin-top: 30px; margin-bottom: 12px; color: #38bdf8; }
+    p { margin-bottom: 16px; color: #94a3b8; }
+    a { color: #38bdf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { display: inline-block; margin-bottom: 24px; color: #6366f1; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="content-box">
+    <a href="./" class="back">&larr; Back to Product Hunt CLI</a>
+    <h1>About Product Hunt CLI</h1>
+    
+    <p>Product Hunt CLI is a high-performance, open-source command-line tool and autonomous agent interface designed to search, discover, and scrape Product Hunt launches and products. Maintained under the SpaceCorps engineering collective, the project originated to provide developers, researchers, and autonomous coding assistants with a standalone binary that executes instantaneously on macOS, Linux, and Windows without runtime dependencies or heavy interpreter overhead.</p>
+
+    <h2>Project Mission & Origins</h2>
+    <p>The original prototype CLI (<code>Producthunt.Console</code>) was implemented as a .NET global tool by Niels Bosma, providing a YAML-first console wrapper around Apify's Product Hunt scraper actor. In 2026, the tool was completely re-architected in Rust 2024 by SpaceCorps. The rewrite achieves sub-millisecond cold starts, strict compile-time safety, native integration with host operating system credential vaults, and full support for automated LLM tool-calling loops.</p>
+
+    <h2>Architectural Principles</h2>
+    <p>Product Hunt CLI is built around three core tenets:</p>
+    <ul>
+      <li><strong>Native Speed & Zero Runtime:</strong> A static, standalone binary compiled with full Link-Time Optimization (LTO) that executes in 1–3 ms without requiring .NET, Node.js, or Python runtimes.</li>
+      <li><strong>Deterministic Multi-Account Keystores:</strong> Sensitive Apify API tokens are never saved in plaintext configuration files. Instead, they are delegated directly to the OS credential vault (macOS Keychain, Windows DPAPI, or Linux Secret Service).</li>
+      <li><strong>Agentic Interoperability:</strong> YAML is rendered by default for human readability, while the <code>--json</code> flag provides structured, parseable JSON for jq scripts and AI agents. Non-zero exits emit structured error envelopes on stderr with actionable remediation hints.</li>
+    </ul>
+
+    <h2>Ecosystem & Lineage</h2>
+    <p>Product Hunt CLI is part of the SpaceCorps open-source initiative, bringing high-performance native CLIs, search tooling, and agent discovery standards to the modern developer community.</p>
+  </div>
+</body>
+</html>

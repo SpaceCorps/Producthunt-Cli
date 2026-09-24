@@ -1,0 +1,95 @@
+# Product Hunt CLI - Comprehensive Agent Reference Manual
+
+> An exhaustive technical manual for autonomous agents driving the Product Hunt CLI (`producthunt`). Drives the Apify Product Hunt scraper actor (`cloud9_ai/producthunt-scraper`).
+
+## When To Use This Tool
+- Automated discovery and market analysis of newly launched products, AI tools, developer utilities, and software startups on Product Hunt.
+- Programmatic scraping of product metadata, upvotes, descriptions, maker profiles, and launch URLs.
+- Extraction of topic collections and curated category directories into structured JSON or YAML.
+- Market research agents building competitive intelligence feeds or daily digests.
+
+## Authentication & Account Resolution
+
+The CLI supports three credential pathways:
+1. **Named Keystore Account**: `--account <name>` (`-a <name>`). Credentials reside securely in macOS Keychain, Windows DPAPI, or Linux Secret Service.
+2. **Explicit Flag**: `--api-key <key>`. Useful in temporary test runners.
+3. **Environment Variable**: `APIFY_TOKEN=<key>`. When neither `--account` nor `--api-key` is supplied, `APIFY_TOKEN` is automatically used.
+
+When none of these are provided and accounts exist, the CLI returns exit code `7` (`no_account`) and displays the available accounts.
+
+## Exit Codes and Error Envelopes
+
+Every error response on stderr conforms to the standard envelope structure:
+```json
+{
+  "code": "error_code_string",
+  "error": "Human readable summary",
+  "detail": "Extended debugging context",
+  "remediation": "Exact command or action needed to fix"
+}
+```
+
+Exit code numbers match the error code contract:
+- `0`: Success (ok)
+- `1`: `error` - Unclassified failure
+- `2`: `network` - Network transport failure or timeout (retry once)
+- `3`: `auth_required` - Token missing, expired, or invalid (surface remediation to human, do not retry)
+- `4`: `not_found` - Resource or actor not found
+- `5`: `rate_limited` - Apify API rate limit exceeded (back off before retrying)
+- `6`: `invalid_input` - Bad command flags, missing query, or invalid parameters
+- `7`: `no_account` - No account specified and no API key available
+
+## Command Reference
+
+### `producthunt search <QUERY>`
+Searches Product Hunt for products matching keywords or phrases.
+
+Flags:
+- `<QUERY>` (required): Search query string.
+- `--max <N>`: Maximum results (default: 10).
+- `--sort <SORT>`: Sort order: `popular` (default) or `newest`.
+- `--time-frame <TF>`: Time window filter: `today`, `this-week`, `this-month`, `all-time`.
+- `-a, --account <ACCOUNT>`: Stored account name to use.
+- `--api-key <KEY>`: Direct Apify token override.
+- `--json`: Format output as raw JSON instead of YAML.
+
+### `producthunt scrape <URL>`
+Scrapes a Product Hunt URL (post page, topic catalog, or collection).
+
+Flags:
+- `<URL>` (required): Target Product Hunt URL.
+- `--max <N>`: Maximum results to scrape (default: 10).
+- `-a, --account <ACCOUNT>`: Stored account name to use.
+- `--api-key <KEY>`: Direct Apify token override.
+- `--json`: Format output as raw JSON instead of YAML.
+
+### `producthunt me`
+Retrieves authenticated user details from Apify (`/v2/users/me`).
+
+Flags:
+- `-a, --account <ACCOUNT>`: Stored account name to check.
+- `--api-key <KEY>`: Direct Apify token override.
+- `--json`: Format output as raw JSON instead of YAML.
+
+### `producthunt login [NAME]`
+Authenticates and saves an Apify token into the OS keystore.
+
+Flags:
+- `[NAME]`: Account name (default: `default`).
+- `--api-key <KEY>`: Provide token directly.
+- `--api-key-stdin`: Read token from standard input.
+- `--no-browser`: Do not open the Apify console in a web browser.
+- `--force`: Overwrite existing stored account.
+- `--no-verify`: Skip verification against `/v2/users/me`.
+
+### `producthunt accounts <SUBCOMMAND>`
+Manages accounts stored in the OS keystore.
+
+Subcommands:
+- `add <NAME>`: Add an account (`--api-key <key>`, `--api-key-stdin`, `--force`, `--no-verify`).
+- `list`: List configured accounts (`--check` tests token against API).
+- `test <NAME>`: Test an account's token against `/v2/users/me`.
+- `remove <NAME>`: Delete account credentials locally (`--yes` to skip prompt).
+
+### `producthunt agent-readme`
+Prints the complete agent operating manual. Supply `--json` for machine-readable format.

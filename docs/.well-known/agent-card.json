@@ -1,0 +1,17 @@
+{
+  "name": "Product Hunt CLI Agent",
+  "description": "Agent interface and automated market discovery tool for Product Hunt launches and products via Apify.",
+  "url": "https://spacecorps.github.io/Producthunt-Cli/",
+  "version": "1.0.0",
+  "capabilities": ["search", "scrape", "discovery", "market-research"],
+  "skills": [
+    {
+      "name": "producthunt-cli",
+      "url": "https://spacecorps.github.io/Producthunt-Cli/llms.txt"
+    }
+  ],
+  "contact": {
+    "email": "contact@spacecorps.dev",
+    "url": "https://spacecorps.github.io/Producthunt-Cli/contact.html"
+  }
+}
